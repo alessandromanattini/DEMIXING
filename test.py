@@ -31,7 +31,7 @@ os.makedirs("./plots", exist_ok=True)
 DATASET_FOLDER = "/Users/alessandromanattini/Desktop/MAE/CAPSTONE/musdb18hq/test"
 SEGMENT = 30  # We'll keep exactly 30 seconds from each track
 
-# !!! --> PAY ATTENTION TO THE SILENT PORTION OF THE TRACKS, THEY CAN CAUSE ERRORS IN THE SEPARATION PROCESS <-- !!!
+# !!! --> PAY ATTENTION TO THE SILENT PORTIONS OF THE TRACKS, THEY CAN CAUSE ERRORS IN THE SEPARATION PROCESS <-- !!!
 # You should choose a portion of the track that contains all the instrument without the channel sums being zero
 # NB: if you encounter a silent portion of the track, you will skip the evaluation for that stem!
 
@@ -80,7 +80,7 @@ print("Loaded tracks:", list(dataset_dict.keys()))
 # and a sub-dict with "mixture", "drums", "bass", "vocals", "other" waveforms
 track_names = list(dataset_dict.keys())
 
-# For example, pick track #6 or any valid index
+
 track_chosen = track_names[25]
 print("Chosen track name:", track_chosen)
 
@@ -194,12 +194,11 @@ def output_results(original_source: torch.Tensor, predicted_source: torch.Tensor
     # Usually PyTorch waveforms are (channels, samples),
     # which is correct for bss_eval_sources.
 
-    # Assumiamo che i tensori abbiano la forma corretta (C, T). 
-    # Verifichiamo l'energia del riferimento (somma degli assoluti per ogni canale).
+    # Verify the energy of the reference(sum of the absolutes for each channel).
     energy = original_source.abs().sum(dim=1)
     print(f"{source} - Energy per channel: {energy}")
     
-    # Se uno dei canali ha energia inferiore alla soglia, saltiamo l'evaluation per questo stem
+    # If one of the cheannel has an energy below the energy threshold (1e-3), skip the evaluation
     if (energy < 1e-3).any():
         print(f"Warning: {source} reference appears silent or nearly silent. Skipping evaluation for this stem.")
         return None  # oppure ritorna un valore di default o una stringa informativa
