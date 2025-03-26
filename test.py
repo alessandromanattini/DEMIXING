@@ -7,6 +7,7 @@ from IPython.display import Audio
 from mir_eval import separation
 from torchaudio.pipelines import HDEMUCS_HIGH_MUSDB_PLUS
 from torchaudio.transforms import Fade
+from tqdm import tqdm
 
 # -----------------------------
 # 1) Load the Model
@@ -31,9 +32,10 @@ os.makedirs("./plots", exist_ok=True)
 DATASET_FOLDER = "/Users/alessandromanattini/Desktop/MAE/CAPSTONE/musdb18hq/test"
 SEGMENT = 30  # We'll keep exactly 30 seconds from each track
 
-# !!! --> PAY ATTENTION TO THE SILENT PORTIONS OF THE TRACKS, THEY CAN CAUSE ERRORS IN THE SEPARATION PROCESS <-- !!!
+# !!! --> PAY ATTENTION TO THE SILENT PORTION OF THE TRACKS, THEY CAN CAUSE ERRORS IN THE SEPARATION PROCESS <-- !!!
 # You should choose a portion of the track that contains all the instrument without the channel sums being zero
 # NB: if you encounter a silent portion of the track, you will skip the evaluation for that stem!
+# It's not raising an error, but i
 
 track_folders = sorted(
     folder for folder in os.listdir(DATASET_FOLDER)
@@ -80,8 +82,8 @@ print("Loaded tracks:", list(dataset_dict.keys()))
 # and a sub-dict with "mixture", "drums", "bass", "vocals", "other" waveforms
 track_names = list(dataset_dict.keys())
 
-
-track_chosen = track_names[25]
+# For example, pick track #6 or any valid index
+track_chosen = track_names[5]
 print("Chosen track name:", track_chosen)
 
 stems_available = list(dataset_dict[track_chosen].keys())
@@ -103,6 +105,11 @@ mixture_waveform = mixture_waveform.to(device)
 
 # We'll do a simple normalization across channels
 ref = mixture_waveform.mean(0)  # shape (samples,)
+print("Mixture shape:", mixture_waveform.shape)
+print("Reference shape:", ref.shape)
+print("Reference mean:", ref.mean().item())
+print("Reference std:", ref.std().item())
+
 mixture_norm = (mixture_waveform - ref.mean()) / ref.std()
 
 # -----------------------------
@@ -194,11 +201,12 @@ def output_results(original_source: torch.Tensor, predicted_source: torch.Tensor
     # Usually PyTorch waveforms are (channels, samples),
     # which is correct for bss_eval_sources.
 
-    # Verify the energy of the reference(sum of the absolutes for each channel).
+    # Assumiamo che i tensori abbiano la forma corretta (C, T). 
+    # Verifichiamo l'energia del riferimento (somma degli assoluti per ogni canale).
     energy = original_source.abs().sum(dim=1)
     print(f"{source} - Energy per channel: {energy}")
     
-    # If one of the cheannel has an energy below the energy threshold (1e-3), skip the evaluation
+    # Se uno dei canali ha energia inferiore alla soglia, saltiamo l'evaluation per questo stem
     if (energy < 1e-3).any():
         print(f"Warning: {source} reference appears silent or nearly silent. Skipping evaluation for this stem.")
         return None  # oppure ritorna un valore di default o una stringa informativa
@@ -207,13 +215,14 @@ def output_results(original_source: torch.Tensor, predicted_source: torch.Tensor
         estimated_sources=predicted_np
     )
 
-    print(f"--- {source} ---")
-    print("SDR:", sdr.mean())
-    print("SIR:", sir.mean())
-    print("SAR:", sar.mean())
-    print("----------------")
+    # print(f"--- {source} ---")
+    # print("SDR:", sdr.mean())
+    # print("SIR:", sir.mean())
+    # print("SAR:", sar.mean())
+    # print("----------------")
 
-    return Audio(predicted_source, rate=sample_rate)
+    #return Audio(predicted_source, rate=sample_rate)
+    return sdr, sir, sar
 
 # Retrieve references from dataset_dict
 drums_ref = dataset_dict[track_chosen]["drums"].to(device)
@@ -248,3 +257,128 @@ def plot_multiple_spectrograms(*tensors, titles=None, filename="spectrogram.png"
     plt.tight_layout()
     plt.savefig(filename)  
     plt.close(fig)
+
+
+
+# -----------------------------------------------------------------------------------
+# We are going to try to find a mean value of SDR, SIR, SAR for all the tracks
+# -----------------------------------------------------------------------------------
+
+sdrlistDrums, sirlistDrums, sarlistDrums = [], [], []
+sdrlistBass,  sirlistBass,  sarlistBass  = [], [], []
+sdrlistVocals,sirlistVocals,sarlistVocals= [], [], []
+sdrlistOther, sirlistOther, sarlistOther = [], [], []
+
+# drums_metrics = [sirlistDrums, sarlistDrums, sdrlistDrums]
+# bass_metrics = [sirlistBass, sarlistBass, sdrlistBass]
+# vocals_metrics = [sirlistVocals, sarlistVocals, sdrlistVocals]
+# other_metrics = [sirlistOther, sarlistOther, sdrlistOther]
+
+# Find the SDR, SAR, SIR for all the tracks and store them in the array
+for track in tqdm(track_names, desc="Processing tracks"):
+    mixture_waveform = dataset_dict[track]["mixture"]
+    duration_seconds = mixture_waveform.shape[1] / sample_rate
+
+    mixture_waveform = mixture_waveform.to(device)
+
+    # We'll do a simple normalization across channels
+    ref = mixture_waveform.mean(0)  
+    mixture_norm = (mixture_waveform - ref.mean()) / ref.std()
+
+    print("Separatig tracks for : ", track + "...")
+
+    sources_tensor = separate_sources(
+        model,
+        mixture_norm[None],  # shape (1, channels, samples)
+        segment=30,
+        overlap=0.0,
+        device=device
+    )[0] 
+
+    sources_tensor = sources_tensor * ref.std() + ref.mean()
+
+    stem_names = model.sources
+    predicted_stems = dict(zip(stem_names, list(sources_tensor)))
+
+    drums_ref = dataset_dict[track]["drums"].to(device)
+    bass_ref = dataset_dict[track]["bass"].to(device)
+    vocals_ref = dataset_dict[track]["vocals"].to(device)
+    other_ref = dataset_dict[track]["other"].to(device)
+
+    drums_pred = predicted_stems["drums"]
+    bass_pred  = predicted_stems["bass"]
+    vocals_pred = predicted_stems["vocals"]
+    other_pred = predicted_stems["other"]
+
+    resultD = output_results(drums_ref, drums_pred, "Drums")
+    if resultD is not None:
+        sdrD, sirD, sarD = resultD
+        sdrlistDrums.append(sdrD)
+        sirlistDrums.append(sirD)
+        sarlistDrums.append(sarD)
+
+    resultB = output_results(bass_ref, bass_pred, "Bass")
+    if resultB is not None:
+        sdrB, sirB, sarB = resultB
+        sdrlistBass.append(sdrB)
+        sirlistBass.append(sirB)
+        sarlistBass.append(sarB)
+
+    resultV = output_results(vocals_ref, vocals_pred, "Vocals")
+    if resultV is not None:
+        sdrV, sirV, sarV = resultV
+        sdrlistVocals.append(sdrV)
+        sirlistVocals.append(sirV)
+        sarlistVocals.append(sarV)
+
+    resultO = output_results(other_ref, other_pred, "Other")
+    if resultO is not None:
+        sdrO, sirO, sarO = resultO
+        sdrlistOther.append(sdrO)
+        sirlistOther.append(sirO)
+        sarlistOther.append(sarO)
+
+# 2) Compute average
+meanSDRDrums = sum(sdrlistDrums) / len(sdrlistDrums) if sdrlistDrums else None
+meanSIRDrums = sum(sirlistDrums) / len(sirlistDrums) if sirlistDrums else None
+meanSARDrums = sum(sarlistDrums) / len(sarlistDrums) if sarlistDrums else None
+
+
+print("--- DRUMS MEAN ---")
+print("SDR:", meanSDRDrums)
+print("SIR:", meanSIRDrums)
+print("SAR:", meanSARDrums)
+print("----------------")
+
+meanSDRBass = sum(sdrlistBass) / len(sdrlistBass)
+meanSIRBass = sum(sirlistBass) / len(sirlistBass)
+meanSARBass = sum(sarlistBass) / len(sarlistBass)
+
+print("--- BASS MEAN ---")
+print("SDR:", meanSDRBass)
+print("SIR:", meanSIRBass)
+print("SAR:", meanSARBass)
+print("----------------")
+
+meanSDRVocals = sum(sdrlistVocals) / len(sdrlistVocals)
+meanSIRVocals = sum(sirlistVocals) / len(sirlistVocals)
+meanSARVocals = sum(sarlistVocals) / len(sarlistVocals)
+
+print("--- VOCALS MEAN ---")
+print("SDR:", meanSDRVocals)
+print("SIR:", meanSIRVocals)
+print("SAR:", meanSARVocals)
+print("----------------")
+
+meanSDROther = sum(sdrlistOther) / len(sdrlistOther)
+meanSIROther = sum(sirlistOther) / len(sirlistOther)
+meanSAROther = sum(sarlistOther) / len(sarlistOther)
+
+print("--- OTHER MEAN ---")
+print("SDR:", meanSDROther)
+print("SIR:", meanSIROther)
+print("SAR:", meanSAROther)
+print("----------------")
+
+
+
