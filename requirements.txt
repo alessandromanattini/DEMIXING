@@ -1,0 +1,6 @@
+matplotlib
+numpy
+IPython
+torch
+torchaudio
+mir_eval
