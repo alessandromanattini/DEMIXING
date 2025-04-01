@@ -25,14 +25,12 @@
 - ⁠Taratura della soglia che definisce l’energia necessaria affinché un chunk sia considerato non silenzioso
 - ⁠Valutazione dell’overlap: inserirlo o evitarlo?
 - ⁠Rendere iterativa la procedura di aggiornamento dei gain da mandare in ingresso alla rete di demixing
+- Tentativo di sostituzione di bss_eval_sources con eval_mus. Lasciata bss_eval_sources nonostante l'elevato onere computazionale perché l'altra dà problemi di compatibilità
 
 ### Microtasks Da fare
-
-- ⁠Risolvere problemi con mps o cuda per scheda grafica
-- ⁠Ottimizzare bss_eval_sources sostituendola con eval_mus. Problemi: la prima richiede troppo tempo per essere eseguita, la seconda prende in ingresso anche window_length e hop_size che vanno tarati
-- ⁠l’SDR non è abbastanza alto (se la differenza non è 0 i risultati hanno senso,  se invece lo è perché sono così bassi?)
-
-- ⁠Provare altri gain per vedere quali ottimizzano i risultati dell'algoritmo
+- Controllare la procedura iterativa. Problema: controllare il comportamento delle ultime due canzoni, una ha valori negativi che scendono al posto di salire e e l’altra ha valori che salgono e scendono
+- ⁠Risolvere problemi con mps o cuda per device di esecuzione ausiliario
+- controllare come mai ⁠l’SDR non è abbastanza alto per quanto riguarda la macrotask 2 (se la differenza non è 0 i risultati hanno senso,  se invece lo è perché sono così bassi?)
 - ⁠Verificare che la funzione find_non_silent_segment funzioni effettivamente facendo la print() della waveform e controllando che nei chunk non ci saino effettivamente parti silenziose
 
 
