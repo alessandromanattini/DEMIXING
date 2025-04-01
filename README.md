@@ -15,7 +15,7 @@
 2.	Mixaggio a 0,25 per tutte le stems ed eventuale confronto con mixture ✅
 3.	Analisi del predittore Oracle e prove of concept: dimostrare che alzando il volume (coefficiente) di una stem rispetto alle altre, si ottiene un risultato migliore in fase di estrazione della stem stessa. 🔄
 4.	Capire come modificare la schedule nel modello
-5.	Scegliere la schedule che ci piace di più e dare una motivazione.
+5.	Scegliere la schedule che ci piace di più e dare una motivazione fra queste [@schedulesssss](https://arxiv.org/pdf/2206.00364).
 
 
 
