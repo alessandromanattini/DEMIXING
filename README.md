@@ -24,6 +24,7 @@
 - Riscrittura del codice come Jupyter Notebook
 - ⁠Taratura della soglia che definisce l’energia necessaria affinché un chunk sia considerato non silenzioso
 - ⁠Valutazione dell’overlap: inserirlo o evitarlo?
+- ⁠Rendere iterativa la procedura di aggiornamento dei gain da mandare in ingresso alla rete di demixing
 
 ### Microtasks Da fare
 
@@ -33,5 +34,5 @@
 
 - ⁠Provare altri gain per vedere quali ottimizzano i risultati dell'algoritmo
 - ⁠Verificare che la funzione find_non_silent_segment funzioni effettivamente facendo la print() della waveform e controllando che nei chunk non ci saino effettivamente parti silenziose
-- ⁠Rendere iterativa la procedura di aggiornamento dei gain da mandare in ingresso alla rete di demixing
+
 
