@@ -32,5 +32,6 @@
 - ⁠Risolvere problemi con mps o cuda per device di esecuzione ausiliario
 - controllare come mai ⁠l’SDR non è abbastanza alto per quanto riguarda la macrotask 2 (se la differenza non è 0 i risultati hanno senso,  se invece lo è perché sono così bassi?)
 - ⁠Verificare che la funzione find_non_silent_segment funzioni effettivamente facendo la print() della waveform e controllando che nei chunk non ci saino effettivamente parti silenziose
+- Controllo Git
 
 
