@@ -34,4 +34,8 @@
 - ⁠Verificare che la funzione find_non_silent_segment funzioni effettivamente facendo la print() della waveform e controllando che nei chunk non ci saino effettivamente parti silenziose
 - Controllo Git
 
+## Branches
+- main: codice funzionante ma che gira su CPU
+- test_Filippo: codice che prova a girare su MPS
+
 
