@@ -14,7 +14,7 @@
 1.	Preparare (un tot di secondi per ogni traccia) e caricare il database ✅
 2.	Mixaggio a 0,25 per tutte le stems ed eventuale confronto con mixture ✅
 3.	Analisi del predittore Oracle e prove of concept: dimostrare che alzando il volume (coefficiente) di una stem rispetto alle altre, si ottiene un risultato migliore in fase di estrazione della stem stessa. 🔄
-4.	Capire come modificare la schedule nel modello
+4.	Capire come modificare la schedule nel modello 🔄
 5.	Scegliere la schedule che ci piace di più e dare una motivazione fra queste [schedulesssss](https://arxiv.org/pdf/2206.00364).
 
 
@@ -29,10 +29,9 @@
 
 ### Microtasks Da fare
 - Controllare la procedura iterativa. Problema: controllare il comportamento delle ultime due canzoni, una ha valori negativi che scendono al posto di salire e e l’altra ha valori che salgono e scendono
-- ⁠Risolvere problemi con mps o cuda per device di esecuzione ausiliario
+- ⁠Risolvere problemi con mps o cuda per device di esecuzione ausiliario. In lavorazione su branch test-Filippo
 - controllare come mai ⁠l’SDR non è abbastanza alto per quanto riguarda la macrotask 2 (se la differenza non è 0 i risultati hanno senso,  se invece lo è perché sono così bassi?)
 - ⁠Verificare che la funzione find_non_silent_segment funzioni effettivamente facendo la print() della waveform e controllando che nei chunk non ci saino effettivamente parti silenziose
-- Controllo Git
 
 ## Branches
 - main: codice funzionante ma che gira su CPU
