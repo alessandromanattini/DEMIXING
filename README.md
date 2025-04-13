@@ -1,4 +1,4 @@
-# DEMIXING
+#  Progressive Inference for Music Demixing
 
 Using denoising diffusion approaches to train music demixing (MDX) models is promising but requires retraining large and carefully tuned neural networks (Plaja-Roglans,2022). Instead, we will explore a related yet different approach: can we improve separation quality solely by scheduling the inference process using a diffusion-inspired strategy even without retraining? By experimenting with existing MDX models (Spleeter by Deezer, Meta’s Demucs, ByteDance’s BS-Roformer, etc.), this project focuses on an exciting opportunity to explore and possibly enhance the performance of state-of-the-art AI techniques.
 
