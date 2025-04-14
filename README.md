@@ -4,9 +4,9 @@ Using denoising diffusion approaches to train music demixing (MDX) models is pro
 
 ## Group:
 
-- ####  Giorgio Magalini &nbsp;([@Giorgio-Magalini](https://github.com/Giorgio-Magalini))<br> codice persona Giò &nbsp;&nbsp; giorgio.magalini@mail.polimi.it
+- ####  Giorgio Magalini &nbsp;([@Giorgio-Magalini](https://github.com/Giorgio-Magalini))<br> 10990259 &nbsp;&nbsp; giorgio.magalini@mail.polimi.it
 
-- ####  Alessandro Manattini &nbsp;([@alessandromanattini](https://github.com/alessandromanattini))<br> codice Ale &nbsp;&nbsp; alessandro.manattini@mail.polimi.it
+- ####  Alessandro Manattini &nbsp;([@alessandromanattini](https://github.com/alessandromanattini))<br> 11006826 &nbsp;&nbsp; alessandro.manattini@mail.polimi.it
 
 - ####  Filippo Marri &nbsp;([@filippomarri](https://github.com/filippomarri))<br> 10110508 &nbsp;&nbsp; filippo.marri@mail.polimi.it
 
@@ -37,13 +37,17 @@ Using denoising diffusion approaches to train music demixing (MDX) models is pro
 - Controllare che i file audio abbiano tutti la stessa bitdepth. (NON IMPLEMENTATO MA CONTROLLATO DAL FINDER)
 - Vanno normalizzate le stems per la new_mixture? No perché la variazione di SDR in funzione della differenza di volume dei segnali è trascurabile nella modalità attuale di valutazione.
 - Sostituire la funzione di mir_eval con quella che si trova a questi [link](https://lightning.ai/docs/torchmetrics/stable/audio/scale_invariant_signal_distortion_ratio.html)
+- Controllare sui datasheet di DEMUCS la normalizzazione usata per l’allenamento del modello e utilizzare la stessa nel codice. Durante la costruzione dei metadati nel metodo build_metadata, se normalize è impostato su True, viene calcolato il valore RMS dell'intera traccia per ciascuna sorgente. Questi valori RMS vengono poi utilizzati per normalizzare i segmenti audio durante il training. La normalizzazione in DEMUCS viene quindi effettuata a livello di dataset, utilizzando i valori RMS precomputati delle tracce complete. <mark> Questo approccio garantisce che le variazioni di ampiezza tra le diverse tracce non influenzino negativamente il processo di apprendimento del modello. (con normalizzazione peggiora di 1‰).
+Per quanto riguarda il dataset creato si è preferito normalizzare le tracce a 1 perché con l'RMS distorce. Senza normalizzazione il volume sarebbe troppo basso. </mark>
+- Confronto fra gli SDR delle tracce estratte dichiarati da DEMUCS ed i nostri (con gain uniformi a 0.25) in fase di valutazione del corretto funzionamento del modello. 
+    - SDR ≈ 5-10 dB per separazioni più semplici (ad esempio, separazione di voce da accompagnamento musicale).
+    - SDR ≈ 10-20 dB per separazioni più accurate (come la separazione di basso, batteria, e voce da un mix complesso).
 
 ### Microtasks Da fare
-- Controllare sui datasheet di DEMUCS la normalizzazione usata per l’allenamento del modello e utilizzare la stessa nel codice.
 - Utilizzare già una sorta di schedule e anziché fare un bar plot si raffigura un line plot con sdr dello stem target sull’asse delle y e numero di iterazioni sull’asse delle ascisse.
-- Confronto fra gli SDR delle tracce estratte dichiarati da DEMUCS ed i nostri (con gain uniformi a 0.25) in fase di valutazione del corretto funzionamento del modello.
 - Implementare diverse schedules
 - Per un’intuitiva rappresentazione dei risultati, ci consiglia di raffigurare l’SDR dell’oracle predictor come limite superiore e quello del DEMUCS con una sola passata come limite inferiore. I nostri risultati saranno (o ci aspettiamo che siano) collocati all’interno di questo intervallo.
+- Controllare l'overlapping nella funzione separate_sources.
 
 ## Branches
 - main: codice funzionante ma che gira su CPU
