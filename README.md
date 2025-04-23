@@ -42,10 +42,10 @@ Per quanto riguarda il dataset creato si è preferito normalizzare le tracce a 1
 - Confronto fra gli SDR delle tracce estratte dichiarati da DEMUCS ed i nostri (con gain uniformi a 0.25) in fase di valutazione del corretto funzionamento del modello. 
     - SDR ≈ 5-10 dB per separazioni più semplici (ad esempio, separazione di voce da accompagnamento musicale).
     - SDR ≈ 10-20 dB per separazioni più accurate (come la separazione di basso, batteria, e voce da un mix complesso).
-
-### Microtasks Da fare
 - Utilizzare già una sorta di schedule e anziché fare un bar plot si raffigura un line plot con sdr dello stem target sull’asse delle y e numero di iterazioni sull’asse delle ascisse.
 - Implementare diverse schedules
+
+### Microtasks Da fare
 - Per un’intuitiva rappresentazione dei risultati, ci consiglia di raffigurare l’SDR dell’oracle predictor come limite superiore e quello del DEMUCS con una sola passata come limite inferiore. I nostri risultati saranno (o ci aspettiamo che siano) collocati all’interno di questo intervallo.
 - Controllare l'overlapping nella funzione separate_sources.
 
