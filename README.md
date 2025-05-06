@@ -34,24 +34,30 @@ Using denoising diffusion approaches to train music demixing (MDX) models is pro
 - Tentativo di sostituzione di bss_eval_sources con eval_mus. Lasciata bss_eval_sources nonostante l'elevato onere computazionale perché l'altra dà problemi di compatibilità
 - prendere tutte le canzoni del dataset, applicare la funzione trim di librosa e salvare le tracce processate in una cartella locale in modo tale da prendere sempre i soliti primi trenta secondi sicuri che non ci sia silenzio né prima né dopo. Consiglia quindi di salvare tutto in una cartella creandoci un dataset personale.
 - sostituire un mix create con gain omogeneo dagli stems alla mixture da usare come reference track.
-- Controllare che i file audio abbiano tutti la stessa bitdepth. (NON IMPLEMENTATO MA CONTROLLATO DAL FINDER)
+- Controllare che i file audio abbiano tutti la stessa bitdepth. (NON IMPLEMENTATO MA CONTROLLATO DAL FINDE: siccome passiamo da 16 bit a 32 bit non ci sono problemi. Come sappiamo infatti, il quantisation noise viene introdotto quando si passa da valori più alti a valori più bassi di bit-depth)
 - Vanno normalizzate le stems per la new_mixture? No perché la variazione di SDR in funzione della differenza di volume dei segnali è trascurabile nella modalità attuale di valutazione.
 - Sostituire la funzione di mir_eval con quella che si trova a questi [link](https://lightning.ai/docs/torchmetrics/stable/audio/scale_invariant_signal_distortion_ratio.html)
 - Controllare sui datasheet di DEMUCS la normalizzazione usata per l’allenamento del modello e utilizzare la stessa nel codice. Durante la costruzione dei metadati nel metodo build_metadata, se normalize è impostato su True, viene calcolato il valore RMS dell'intera traccia per ciascuna sorgente. Questi valori RMS vengono poi utilizzati per normalizzare i segmenti audio durante il training. La normalizzazione in DEMUCS viene quindi effettuata a livello di dataset, utilizzando i valori RMS precomputati delle tracce complete. <mark> Questo approccio garantisce che le variazioni di ampiezza tra le diverse tracce non influenzino negativamente il processo di apprendimento del modello. (con normalizzazione peggiora di 1‰).
 Per quanto riguarda il dataset creato si è preferito normalizzare le tracce a 1 perché con l'RMS distorce. Senza normalizzazione il volume sarebbe troppo basso. </mark>
 - Confronto fra gli SDR delle tracce estratte dichiarati da DEMUCS ed i nostri (con gain uniformi a 0.25) in fase di valutazione del corretto funzionamento del modello. 
-    - SDR ≈ 5-10 dB per separazioni più semplici (ad esempio, separazione di voce da accompagnamento musicale).
+    - SDR ≈ 5-10 dB per separazioni meno selettive (traccia others) (ad esempio, separazione di voce da accompagnamento musicale).
     - SDR ≈ 10-20 dB per separazioni più accurate (come la separazione di basso, batteria, e voce da un mix complesso).
 - Utilizzare già una sorta di schedule e anziché fare un bar plot si raffigura un line plot con sdr dello stem target sull’asse delle y e numero di iterazioni sull’asse delle ascisse.
 - Implementare diverse schedules
+-   Rimettere a posto nel file word la schedule lineare (ci va messa quella vera e non quella costante).
 
 ### Microtasks Da fare
+- Andare avanti sul modello proposto dal professore (voce da aggiungere al mix). Il nostro può anche essere cancellato.
+- Ridefinire la schedule in modo più elegante come fatto sui paper. Si definisce un fattore β e, conseguentemente, il gain dell’accompagnamento come (1-β) e quello della voce come β. Prendere come esempio lo pseudocodice scritto dal professore nel PDF del 6 Maggio.
+- Controllare dal codice il max della waveform post mix e, con l'orecchio, se i file wav salvati sono distorti una volta ricreato il mix (non con Ipython).
+- Implementazione del WF secondo due diverse modalità (dettagli nel PDF del 6 Maggio):
+    1.	Alla fine delle iterazioni (come nel paper)
+    2.	Per ogni iterazione: ogni step di inferenza può introdurre noise che viene contrastato con la tecnica del WF del paper.
 - Per un’intuitiva rappresentazione dei risultati, ci consiglia di raffigurare l’SDR dell’oracle predictor come limite superiore e quello del DEMUCS con una sola passata come limite inferiore. I nostri risultati saranno (o ci aspettiamo che siano) collocati all’interno di questo intervallo.
 - Controllare l'overlapping nella funzione separate_sources.
-- Check max Value file audio post mix
+
 
 ## Branches
-- main: codice funzionante ma che gira su CPU
-- test_Filippo: codice che prova a girare su MPS
-
+- main: codice su cui lavoriamo
+- test_Filippo: codice non funzionante che può essere cancellato
 
