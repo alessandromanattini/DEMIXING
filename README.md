@@ -48,6 +48,7 @@ Per quanto riguarda il dataset creato si è preferito normalizzare le tracce a 1
 ### Microtasks Da fare
 - Per un’intuitiva rappresentazione dei risultati, ci consiglia di raffigurare l’SDR dell’oracle predictor come limite superiore e quello del DEMUCS con una sola passata come limite inferiore. I nostri risultati saranno (o ci aspettiamo che siano) collocati all’interno di questo intervallo.
 - Controllare l'overlapping nella funzione separate_sources.
+- Check max Value file audio post mix
 
 ## Branches
 - main: codice funzionante ma che gira su CPU
