@@ -44,11 +44,12 @@ Per quanto riguarda il dataset creato si è preferito normalizzare le tracce a 1
     - SDR ≈ 10-20 dB per separazioni più accurate (come la separazione di basso, batteria, e voce da un mix complesso).
 - Utilizzare già una sorta di schedule e anziché fare un bar plot si raffigura un line plot con sdr dello stem target sull’asse delle y e numero di iterazioni sull’asse delle ascisse.
 - Implementare diverse schedules
--   Rimettere a posto nel file word la schedule lineare (ci va messa quella vera e non quella costante).
+- Rimettere a posto nel file word la schedule lineare (ci va messa quella vera e non quella costante).
+- Implementare funzione che esegue un wiener filtering stereo
 
 ### Microtasks Da fare
 - Andare avanti sul modello proposto dal professore (voce da aggiungere al mix). Il nostro può anche essere cancellato.
-- Ridefinire la schedule in modo più elegante come fatto sui paper. Si definisce un fattore β e, conseguentemente, il gain dell’accompagnamento come (1-β) e quello della voce come β. Prendere come esempio lo pseudocodice scritto dal professore nel PDF del 6 Maggio.
+- Ridefinire la schedule in modo più elegante come fatto sui paper. Si definisce un fattore β e, conseguentemente, il gain dell’accompagnamento come (1-β) e quello della voce come β. Prendere come esempio lo pseudocodice scritto dal professore nel PDF del 6 Maggio. Va rimessa a posto nella funzione che avevamo creato.
 - Controllare dal codice il max della waveform post mix e, con l'orecchio, se i file wav salvati sono distorti una volta ricreato il mix (non con Ipython).
 - Implementazione del WF secondo due diverse modalità (dettagli nel PDF del 6 Maggio):
     1.	Alla fine delle iterazioni (come nel paper)
