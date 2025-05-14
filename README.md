@@ -56,6 +56,7 @@ Per quanto riguarda il dataset creato si è preferito normalizzare le tracce a 1
     2.	Per ogni iterazione: ogni step di inferenza può introdurre noise che viene contrastato con la tecnica del WF del paper.
 - Per un’intuitiva rappresentazione dei risultati, ci consiglia di raffigurare l’SDR dell’oracle predictor come limite superiore e quello del DEMUCS con una sola passata come limite inferiore. I nostri risultati saranno (o ci aspettiamo che siano) collocati all’interno di questo intervallo.
 - Controllare l'overlapping nella funzione separate_sources.
+- Reintrodurre la motivazione Oracle Predictor
 
 
 ## Branches
