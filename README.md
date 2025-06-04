@@ -15,15 +15,15 @@ Using denoising diffusion approaches to train music demixing (MDX) models is pro
 ### Macrotasks
 1.	Preparare (un tot di secondi per ogni traccia) e caricare il database ✅
 2.	Mixaggio a 0,25 per tutte le stems ed eventuale confronto con mixture ✅
-3.	Analisi del predittore Oracle e prove of concept: dimostrare che alzando il volume (coefficiente) di una stem rispetto alle altre, si ottiene un risultato migliore in fase di estrazione della stem stessa. ✅ *DA RIVEDERE*
-4.	Capire come modificare la schedule nel modello 🔄
-5.	Scegliere la schedule che ci piace di più e dare una motivazione fra queste [schedulesssss](https://arxiv.org/pdf/2206.00364).
-6.	Si fanno i test con diverse schedule confrontandoli con DEMUCS chiamato una volta sola
-7.	Si scrive il report
+3.	Analisi del predittore Oracle e prove of concept: dimostrare che alzando il volume (coefficiente) di una stem rispetto alle altre, si ottiene un risultato migliore in fase di estrazione della stem stessa. ✅
+4.	Capire come modificare la schedule nel modello ✅
+5.	Scegliere la schedule che ci piace di più e dare una motivazione fra queste [schedulesssss](https://arxiv.org/pdf/2206.00364). ✅
+6.	Si fanno i test con diverse schedule confrontandoli con DEMUCS chiamato una volta sola ✅
+7.	Si scrive il report 🔄
 
 --------------------most valuable product--------------------
 
-8.	In base a quanto tempo abbiamo e a che punto siamo si possono aggiungere, volendo, altre schedules, altre stems o, addirittura, condurre la stessa analisi su un altro modello.
+8.	In base a quanto tempo abbiamo e a che punto siamo si possono aggiungere, volendo, altre schedules, altre stems o, addirittura, condurre la stessa analisi su un altro modello. ✅
 
 ### Microtasks Completate
 - Implementazione ⁠SDR, SIR, SAR
@@ -46,8 +46,6 @@ Per quanto riguarda il dataset creato si è preferito normalizzare le tracce a 1
 - Implementare diverse schedules
 - Rimettere a posto nel file word la schedule lineare (ci va messa quella vera e non quella costante).
 - Implementare funzione che esegue un wiener filtering stereo
-
-### Microtasks Da fare
 - Andare avanti sul modello proposto dal professore (voce da aggiungere al mix). Il nostro può anche essere cancellato.
 - Ridefinire la schedule in modo più elegante come fatto sui paper. Si definisce un fattore β e, conseguentemente, il gain dell’accompagnamento come (1-β) e quello della voce come β. Prendere come esempio lo pseudocodice scritto dal professore nel PDF del 6 Maggio. Va rimessa a posto nella funzione che avevamo creato.
 - Controllare dal codice il max della waveform post mix e, con l'orecchio, se i file wav salvati sono distorti una volta ricreato il mix (non con Ipython).
@@ -55,8 +53,10 @@ Per quanto riguarda il dataset creato si è preferito normalizzare le tracce a 1
     1.	Alla fine delle iterazioni (come nel paper)
     2.	Per ogni iterazione: ogni step di inferenza può introdurre noise che viene contrastato con la tecnica del WF del paper.
 - Per un’intuitiva rappresentazione dei risultati, ci consiglia di raffigurare l’SDR dell’oracle predictor come limite superiore e quello del DEMUCS con una sola passata come limite inferiore. I nostri risultati saranno (o ci aspettiamo che siano) collocati all’interno di questo intervallo.
-- Controllare l'overlapping nella funzione separate_sources.
 - Reintrodurre la motivazione Oracle Predictor
+
+### Microtasks Da fare
+- Controllare l'overlapping nella funzione separate_sources.
 
 
 ## Branches
