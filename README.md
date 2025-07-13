@@ -10,9 +10,13 @@ Isolating individual sources from a musical mixture remains a key challenge in a
 
 - ####  Filippo Marri &nbsp;([@filippomarri](https://github.com/filippomarri))<br> 10110508 &nbsp;&nbsp; filippo.marri@mail.polimi.it
 
-## How to run the code
+## Code:
 
 Two codes are provided in the folder:
 >[L12.ipynb](L12.ipynb): this is the Jupyter Notebook to be run to replicate the results.
 
 >[standard_SDR_ealuation.py](standard_SDR_ealuation.py): this script is created separate in order not to overload the kernel. It computes the average standard SDR of all the songs contained in the test set without any pre-processing.
+
+## Report:
+If you are looking for more details, here the report.
+>[L12_Report.pdf](L12_Report.pdf)
